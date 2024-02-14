@@ -1,40 +1,35 @@
 package ie.tudublin;
 
+import javazoom.jl.converter.RiffFile;
 import processing.core.PApplet;
 
+public class Arrays extends PApplet {
+	String[] months = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
+	float[] rainfall = { 200, 260, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420 };
 
-public class Arrays extends PApplet
-{
-	String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+	int mode = 0;
 
-	float[] rainfall = {200, 260, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420};
-
-	public float map1(float a, float b, float c, float d, float e)
-	{
-		float r1 = c -b;
+	public float map1(float a, float b, float c, float d, float e) {
+		float r1 = c - b;
 		float r2 = e - d;
 
 		float howFar = a - b;
 		return d + (howFar / r1) * r2;
 	}
 
-	void randomize()
-	{
+	void randomize() {
 		for (int i = 0; i < rainfall.length; i++) {
 			rainfall[i] = random(500);
 		}
 	}
 
-	public void settings()
-	{
-		size(500, 500);
+	public void settings() {
+		size(800, 800);
 
 		String[] m1 = months;
-		months[0] = "XXX";
 		print(m1[0]);
-		for(int i = 0; i < months.length; i ++)
-		{
+		for (int i = 0; i < months.length; i++) {
 			println("Month: " + months[i] + "\t" + rainfall[i]);
 		}
 		for (String s : m1) {
@@ -42,30 +37,24 @@ public class Arrays extends PApplet
 		}
 
 		int minIndex = 0;
-		for(int i= 0 ; i < rainfall.length ; i ++)
-		{
-			if (rainfall[i] < rainfall[minIndex])
-			{
+		for (int i = 0; i < rainfall.length; i++) {
+			if (rainfall[i] < rainfall[minIndex]) {
 				minIndex = i;
 			}
 		}
-		
+
 		int maxIndex = 0;
-		for(int i= 0 ; i < rainfall.length ; i ++)
-		{
-			if (rainfall[i] > rainfall[maxIndex])
-			{
+		for (int i = 0; i < rainfall.length; i++) {
+			if (rainfall[i] > rainfall[maxIndex]) {
 				maxIndex = i;
 			}
 		}
 
 		println("The month with the minimum rainfall was " + months[minIndex] + " with " + rainfall[minIndex] + "rain");
 		println("The month with the max rainfall was " + months[maxIndex] + " with " + rainfall[maxIndex] + "rain");
-		
-		
+
 		float tot = 0;
-		for(float f:rainfall)
-		{
+		for (float f : rainfall) {
 			tot += f;
 		}
 
@@ -79,29 +68,81 @@ public class Arrays extends PApplet
 		// 250
 
 		println(map1(26, 25, 35, 0, 100));
-		// 10 
-
+		// 10
 
 	}
 
 	public void setup() {
-		colorMode(HSB);
+		colorMode(HSB, 360);
 		background(0);
 		randomize();
-		
-		
+
 	}
 
-	
-	public void draw()
-	{	
+	public void keyPressed() {
+		if (key >= '0' && key <= '9') {
+			mode = key - '0';
+		}
+		println(mode);
+	}
 
+	public void graphTemplate() {
+		// Draws the graphs template, for x and y.
 		background(0);
-		float w = width / (float)months.length;
-		for(int i = 0 ; i < months.length ;  i ++)
-		{
-			float x = map1(i, 0, months.length, 0, width);
-			rect(x, height, w, -rainfall[i]);
+		stroke(0, 0, 360);
+		// Vertical line.
+		line(width * 0.1f, height * 0.9f, width * 0.1f, height * 0.1f);
+		// Horizontal line.
+		line(width * 0.1f, height * 0.9f, width * 0.9f, height * 0.9f);
+
+		// Draws the vertical axis, 0 - 500 in increments of 50.
+		for (int i = 0; i <= 500; i += 50) {
+			//
+			float y = map1(i, 0, 500, height * 0.9f, width * 0.1f);
+			line(width * 0.1f, y, (width * 0.1f) - 10, y); // Draw ticks.
+			textSize(20);
+			textAlign(RIGHT, CENTER);
+			text(i, width * 0.08f, y); // Places text slightly away from initial line.
+		}
+
+		for (int i = 0; i < months.length; i++) {
+			// check the length of the text, and then add/subtract it to correctly position
+			// in the middle of each bar.
+			float x = map1(i, 0, months.length - 1, height * 0.1f + textWidth(months[i]) / 2,
+					width * 0.9f - textWidth(months[i]) / 2);
+			textSize(18);
+			textAlign(CENTER, CENTER);
+			text(months[i], x, height * 0.92f);
+		}
+	}
+
+	public void draw() {
+
+		switch (mode) {
+			case 0: {
+				background(0);
+				float w = width / (float) months.length;
+				for (int i = 0; i < months.length; i++) {
+					float x = map1(i, 0, months.length, 0, width);
+					rect(x, height, w, -rainfall[i]);
+				}
+				break;
+			}
+			case 1: {
+				int bars = months.length;
+				graphTemplate();
+				for (int i = 0; i < bars; i++) {
+
+				}
+
+				break;
+			}
+			case 2: {
+
+				break;
+			}
+			default:
+				break;
 		}
 	}
 }
