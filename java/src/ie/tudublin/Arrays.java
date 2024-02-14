@@ -25,7 +25,7 @@ public class Arrays extends PApplet {
 	}
 
 	public void settings() {
-		size(800, 800);
+		size(1600, 800);
 
 		String[] m1 = months;
 		print(m1[0]);
@@ -97,8 +97,7 @@ public class Arrays extends PApplet {
 
 		// Draws the vertical axis, 0 - 500 in increments of 50.
 		for (int i = 0; i <= 500; i += 50) {
-			//
-			float y = map1(i, 0, 500, height * 0.9f, width * 0.1f);
+			float y = map1(i, 0, 500, height * 0.9f, height * 0.1f);
 			line(width * 0.1f, y, (width * 0.1f) - 10, y); // Draw ticks.
 			textSize(20);
 			textAlign(RIGHT, CENTER);
@@ -108,11 +107,12 @@ public class Arrays extends PApplet {
 		for (int i = 0; i < months.length; i++) {
 			// check the length of the text, and then add/subtract it to correctly position
 			// in the middle of each bar.
-			float x = map1(i, 0, months.length - 1, height * 0.1f + textWidth(months[i]) / 2,
+			float x = map1(i, 0, months.length - 1, width * 0.1f + textWidth(months[i]) / 2,
 					width * 0.9f - textWidth(months[i]) / 2);
+			float y = height * 0.92f;
 			textSize(18);
 			textAlign(CENTER, CENTER);
-			text(months[i], x, height * 0.92f);
+			text(months[i], x, y);
 		}
 	}
 
