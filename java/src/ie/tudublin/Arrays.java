@@ -27,7 +27,7 @@ public class Arrays extends PApplet {
 	}
 
 	public void settings() {
-		size(100, 50);
+		size(800, 800);
 	}
 
 	public void setup() {
