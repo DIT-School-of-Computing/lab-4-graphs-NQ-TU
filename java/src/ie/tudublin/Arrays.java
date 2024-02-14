@@ -6,7 +6,7 @@ import processing.core.PApplet;
 public class Arrays extends PApplet {
 	String[] months = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-	float[] rainfall = { 200, 260, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420 };
+	float[] rainfall = { 500, 450, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420 };
 
 	int mode = 0;
 
@@ -25,51 +25,7 @@ public class Arrays extends PApplet {
 	}
 
 	public void settings() {
-		size(1600, 800);
-
-		String[] m1 = months;
-		print(m1[0]);
-		for (int i = 0; i < months.length; i++) {
-			println("Month: " + months[i] + "\t" + rainfall[i]);
-		}
-		for (String s : m1) {
-			println(s);
-		}
-
-		int minIndex = 0;
-		for (int i = 0; i < rainfall.length; i++) {
-			if (rainfall[i] < rainfall[minIndex]) {
-				minIndex = i;
-			}
-		}
-
-		int maxIndex = 0;
-		for (int i = 0; i < rainfall.length; i++) {
-			if (rainfall[i] > rainfall[maxIndex]) {
-				maxIndex = i;
-			}
-		}
-
-		println("The month with the minimum rainfall was " + months[minIndex] + " with " + rainfall[minIndex] + "rain");
-		println("The month with the max rainfall was " + months[maxIndex] + " with " + rainfall[maxIndex] + "rain");
-
-		float tot = 0;
-		for (float f : rainfall) {
-			tot += f;
-		}
-
-		float avg = tot / (float) rainfall.length;
-
-		// a b-c d-e;
-		println(map1(5, 0, 10, 0, 100));
-		// 50
-
-		println(map1(25, 20, 30, 200, 300));
-		// 250
-
-		println(map1(26, 25, 35, 0, 100));
-		// 10
-
+		size(900, 600);
 	}
 
 	public void setup() {
@@ -86,16 +42,63 @@ public class Arrays extends PApplet {
 		println(mode);
 	}
 
+	public void draw() {
+
+		switch (mode) {
+			case 0: { // Rainfall Bar Chart
+				float color_val = 0; // Change colors :)
+				graphTemplate(); // Draw our graph template
+				text("Rainfall Bar Chart", width / 2, height * 0.05f);
+
+				for (int i = 0; i < months.length; i++) {
+					float x = map1(i, 0, months.length, width * 0.1f, width * 0.9f);
+					float barHeight = map1(rainfall[i], 0, 500, 0, height * 0.8f);
+					fill(color_val, 360, 360);
+					strokeWeight(2);
+					stroke(0, 0, 360);
+					rect(x, height * 0.9f - barHeight, (width * 0.8f) / months.length, barHeight);
+					color_val += (360 / months.length);
+				}
+				break;
+			}
+			case 1: {
+				graphTemplate();
+				// gridTemplate();
+				text("Rainfall Trend Chart", width / 2, height * 0.05f);
+				// Begin line at middle of each months 'section'.
+				float middlePoint = (width * 0.8f) / (months.length * 2);
+				for (int i = 1; i <= months.length - 1; i++) {
+					float startX = map1(i, 0, months.length, width * 0.1f + middlePoint, width * 0.9f + middlePoint);
+					float prevX = map1(i - 1, 0, months.length, width * 0.1f + middlePoint, width * 0.9f + middlePoint);
+					float startY = map(rainfall[i], 0, 500, height * 0.9f, height * 0.1f);
+					float prevY = map(rainfall[i - 1], 0, 500, height * 0.9f, height * 0.1f);
+					strokeWeight(2);
+					stroke(360);
+					line(startX, startY, prevX, prevY);
+				}
+				break;
+			}
+			case 2: {
+				float slices = months.length;
+				text("Rainfall Pie Chart", width / 2, height * 0.05f);
+
+				break;
+			}
+			default:
+				break;
+		}
+	}
+
 	public void graphTemplate() {
 		// Draws the graphs template, for x and y.
 		background(0);
+		strokeWeight(3);
 		stroke(0, 0, 360);
-		// Vertical line.
+		fill(0, 0, 360);
 		line(width * 0.1f, height * 0.9f, width * 0.1f, height * 0.1f);
-		// Horizontal line.
 		line(width * 0.1f, height * 0.9f, width * 0.9f, height * 0.9f);
 
-		// Draws the vertical axis, 0 - 500 in increments of 50.
+		// Draws the Y axis, 0 to 500 in increments of 50.
 		for (int i = 0; i <= 500; i += 50) {
 			float y = map1(i, 0, 500, height * 0.9f, height * 0.1f);
 			line(width * 0.1f, y, (width * 0.1f) - 10, y); // Draw ticks.
@@ -103,7 +106,7 @@ public class Arrays extends PApplet {
 			textAlign(RIGHT, CENTER);
 			text(i, width * 0.08f, y); // Places text slightly away from initial line.
 		}
-
+		// Draws the X axis, each month in our months array.
 		for (int i = 0; i < months.length; i++) {
 			// check the length of the text, and then add/subtract it to correctly position
 			// in the middle of each bar.
@@ -116,33 +119,19 @@ public class Arrays extends PApplet {
 		}
 	}
 
-	public void draw() {
-
-		switch (mode) {
-			case 0: {
-				background(0);
-				float w = width / (float) months.length;
-				for (int i = 0; i < months.length; i++) {
-					float x = map1(i, 0, months.length, 0, width);
-					rect(x, height, w, -rainfall[i]);
-				}
-				break;
-			}
-			case 1: {
-				int bars = months.length;
-				graphTemplate();
-				for (int i = 0; i < bars; i++) {
-
-				}
-
-				break;
-			}
-			case 2: {
-
-				break;
-			}
-			default:
-				break;
+	public void gridTemplate() {
+		// Draws a grid, used to check if bars + points displayed correctly.
+		for (int i = 0; i <= 500; i += 50) {
+			float y = map1(i, 0, 500, height * 0.9f, height * 0.1f);
+			strokeWeight(1);
+			stroke(50);
+			line(width * 0.1f, y, (width * 0.9f), y); // Draw ticks.
+		}
+		for (int i = 0; i < months.length + 1; i += 1) {
+			float x = map1(i, 0, months.length, width * 0.1f, width * 0.9f);
+			strokeWeight(1);
+			stroke(50);
+			line(x, height * 0.1f, x, (height * 0.9f)); // Draw ticks.
 		}
 	}
 }
