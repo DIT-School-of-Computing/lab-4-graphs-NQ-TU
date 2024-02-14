@@ -10,6 +10,8 @@ public class Arrays extends PApplet {
 
 	int mode = 0;
 
+	float color_val = 0;
+
 	public float map1(float a, float b, float c, float d, float e) {
 		float r1 = c - b;
 		float r2 = e - d;
@@ -25,7 +27,7 @@ public class Arrays extends PApplet {
 	}
 
 	public void settings() {
-		size(900, 600);
+		size(100, 50);
 	}
 
 	public void setup() {
@@ -46,7 +48,7 @@ public class Arrays extends PApplet {
 
 		switch (mode) {
 			case 0: { // Rainfall Bar Chart
-				float color_val = 0; // Change colors :)
+				color_val = 0; // Change colors :)
 				graphTemplate(); // Draw our graph template
 				text("Rainfall Bar Chart", width / 2, height * 0.05f);
 
@@ -79,8 +81,46 @@ public class Arrays extends PApplet {
 				break;
 			}
 			case 2: {
+				background(0);
+				stroke(0, 0, 360);
+				fill(0, 0, 360);
+				color_val = 0;
+				// Initialise a few variables for pie chart.
 				float slices = months.length;
+				float totalRainfall = 0;
+				float startAngle = 0;
+				float circle_circumference = 0;
+
+				// Ensures pie chart fits within the screen.
+				if (height > width) {
+					circle_circumference = width * 0.7f;
+				} else {
+					circle_circumference = height * 0.7f;
+				}
+				for (float num : rainfall) {
+					totalRainfall += num;
+				}
+
 				text("Rainfall Pie Chart", width / 2, height * 0.05f);
+
+				for (int i = 0; i < slices; i++) {
+					float angle = map(rainfall[i], 0, totalRainfall, 0, TWO_PI);
+					fill(color_val, 360, 360);
+					// Centered on screen, print from beginning of angle and fill until slice is
+					// complete.
+					arc(width / 2, height / 2, circle_circumference, circle_circumference, startAngle,
+							startAngle + angle);
+					startAngle += angle; // New angle for next slice. e.g., first 15%, 0 + 54 = next startangle.
+					color_val += (360 / slices);
+					// Print text in the middle of slices and just outside the edge.
+					float midAngle = startAngle - angle / 2;
+					float textX = width / 2 + cos(midAngle) * (circle_circumference / 1.8f);
+					float textY = height / 2 + sin(midAngle) * (circle_circumference / 1.8f);
+					textAlign(CENTER, CENTER);
+					textSize(18);
+					fill(360);
+					text(months[i], textX, textY);
+				}
 
 				break;
 			}
