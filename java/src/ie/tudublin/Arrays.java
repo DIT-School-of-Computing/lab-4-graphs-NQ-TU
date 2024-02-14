@@ -61,7 +61,7 @@ public class Arrays extends PApplet {
 				}
 				break;
 			}
-			case 1: {
+			case 1: { // Rainfall Trend Chart
 				graphTemplate();
 				// gridTemplate();
 				text("Rainfall Trend Chart", width / 2, height * 0.05f);
